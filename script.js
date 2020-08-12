@@ -4,6 +4,7 @@ const authorText = document.getElementById('author');
 const twitterBtn = document.getElementById('twitter');
 const newQuoteBtn = document.getElementById('new-quote');
 const loader = document.getElementById('loader');
+let loadingLoop = 0;
 
 //Show Loading
 function loading() {
@@ -20,6 +21,7 @@ function complete() {
 //Get Quote From API
 async function getQuote() {
 
+    
     loading();
 
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
@@ -48,8 +50,21 @@ async function getQuote() {
         complete();
 
     } catch (error) {
-        getQuote();
-        // console.log('oops, we have a problem', error);
+
+        console.log('oops, we have a problem', error);
+
+        loadingLoop += 1;
+        if (loadingLoop < 100) {
+            getQuote();
+        } else {
+            loadingLoop = 0;
+            quoteText.innerText = 'Oops... check back later';
+            authorText.innerText = 'Server Admin'
+            complete()
+        }
+        
+        
+
     }
 
 }
